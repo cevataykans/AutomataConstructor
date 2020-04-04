@@ -129,7 +129,7 @@ public class Automaton<State, Sym> {
         
         System.out.println("digraph finite_state_machine {");
         System.out.println("    rankdir=LR;");
-        System.out.println("    size=\"10,10\"");
+        System.out.println("    size=\"10,10\";");
         System.out.println("    node [shape = doublecircle]; " + acc + ";");
         System.out.println("    node [shape = circle];");
         
@@ -137,7 +137,7 @@ public class Automaton<State, Sym> {
             for (State dst : trans.get(src).keySet()) {
                 Set<Sym> syms = trans.get(src).get(dst);
                 System.out.println(
-                        stateStringRep(src) + " -> " + 
+                        stateStringRep(src) + " -> " +
                         stateStringRep(dst) + 
                         " [ label = \"" + symsStringRep(syms) + "\" ];");
             }

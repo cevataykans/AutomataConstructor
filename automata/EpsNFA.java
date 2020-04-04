@@ -5,18 +5,15 @@ import java.util.*;
 public class EpsNFA extends Automaton<Integer, Character> {
     
     public final static Character EPSILON = '\u03B5';
-    
-    
+
     public EpsNFA() {
         initial = 0;
     }
-    
-    
+
     public Integer getMaxState() {
         return Collections.max(getStates());
     }
-    
-    
+
     public EpsNFA shiftStates(int delta) {
         EpsNFA newNfa = new EpsNFA();
         
