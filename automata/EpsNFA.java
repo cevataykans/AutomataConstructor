@@ -51,13 +51,12 @@ public class EpsNFA extends Automaton<Integer, Character> {
     }
 
     public Automaton<Integer, Character> toDFA() {
-        // Set-up the new DFA
-        Automaton<Integer, Character> finalDFA = new Automaton<Integer, Character>();
-        finalDFA.setInitialState(0);
-
         // Get the initial set of states for the DFA & get the accepting state of e-NFA
         Set<Integer> initial = epsClosure(this.initial);
         int eNfaAccepting = this.getFirstAcceptingState();
+
+        // Create the mapping of transitions for the DFA
+        HashMap<Set<Integer>, Map<Character, Set<Integer>>> dfa = new HashMap<Set<Integer>, Map<Character, Set<Integer>>>();
 
         // Get the input symbols of e-NFA & exclude EPSILON from the set of symbols
         Set<Character> symbols = getSymbols();
@@ -74,12 +73,8 @@ public class EpsNFA extends Automaton<Integer, Character> {
         while (!toVisit.isEmpty()) {
             Set<Integer> currentSet = toVisit.remove(0);
 
-        /* If the currentSet contains the accepting state of the
-            e-NFA, add it as an accepting state to the finalDFA*/
-            if (currentSet.contains(eNfaAccepting))
-                finalDFA.addAcceptingState(dfaStateCount);
-
             // Map the current set to an index
+            dfa.put(currentSet, new HashMap<Character, Set<Integer>>());
             setToIntMapping.put(currentSet, dfaStateCount++);
 
             for (Character input : symbols) {
@@ -108,7 +103,7 @@ public class EpsNFA extends Automaton<Integer, Character> {
                             Integer epsCheck = epsilonVisits.remove(0);
                             Map<Integer, Set<Character>> epsCheckTransition = trans.get(epsCheck);
 
-                            // If any transitions from the current state exist, process them
+                            // If any transitions from the current state exist, check them
                             if (epsCheckTransition != null) {
                                 for (Integer dst : epsCheckTransition.keySet()) {
                                     if (epsCheckTransition.get(dst).contains(EPSILON)) {
@@ -123,18 +118,38 @@ public class EpsNFA extends Automaton<Integer, Character> {
 
             /* If the current set is not already processed and its
              not empty, add it to the list for further processing*/
-                if (!transition.isEmpty()) {
-                    int curIndex = setToIntMapping.containsKey(transition) ? setToIntMapping.get(transition) : dfaStateCount;
-                    Integer src = setToIntMapping.get(currentSet);
-                    finalDFA.addTransition(src, curIndex, input);
+                if (!dfa.keySet().contains(transition) && !transition.isEmpty())
+                    toVisit.add(transition);
 
-                    if (curIndex == dfaStateCount)
-                        toVisit.add(transition);
+                dfa.get(currentSet).put(input, transition);
+            }
+        }
+
+        //System.out.println("DFA: " + dfa);
+        //System.out.println("Set to Int Mapping: " + setToIntMapping);
+        Automaton<Integer, Character> finalDFA = new Automaton<Integer, Character>();
+        finalDFA.setInitialState(0);
+
+        for (Set<Integer> state : dfa.keySet()) {
+            Integer src = setToIntMapping.get(state);
+            Map<Character, Set<Integer>> transitions = dfa.get(state);
+
+        /* If the current set of states contains the accepting
+           state of the e-NFA, add its mapping to the final DFA*/
+            if (state.contains(eNfaAccepting)) {
+                finalDFA.addAcceptingState(src);
+            }
+
+            for (Character symbol : symbols) {
+                Set<Integer> stateSet = transitions.get(symbol);
+
+                // If not a transition to an empty set, add transition
+                if (!stateSet.isEmpty()) {
+                    Integer dst = setToIntMapping.get(stateSet);
+                    finalDFA.addTransition(src, dst, symbol);
                 }
             }
         }
-        System.out.println("Set to Int Mapping: " + setToIntMapping);
-
         return finalDFA;
     }
 }
