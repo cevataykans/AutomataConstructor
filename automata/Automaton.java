@@ -75,7 +75,20 @@ public class Automaton<State, Sym> {
                     successors.add(dst);
         return successors;
     }
-    
+
+    // Returns the input symbols for the automaton
+    protected Set<Sym> getSymbols() {
+        Set<Sym> symbols = new HashSet<Sym>();
+
+        for (Map<State, Set<Sym>> transition : trans.values()) {
+            for(Set<Sym> vals : transition.values()) {
+                for(Sym s: vals) {
+                    symbols.add(s);
+                }
+            }
+        }
+        return symbols;
+    }
     
     public void mergeStates(State s1, State s2) {
         
