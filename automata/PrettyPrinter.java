@@ -166,7 +166,7 @@ public class PrettyPrinter implements RegExpVisitor {
         {
             for ( Integer dst : e2.getTransitions().get( src).keySet() )
             {
-                System.out.println( " from " + src + " to " + dst + " via" + e2.getTransitions().get(src).get( dst));
+                //System.out.println( " from " + src + " to " + dst + " via" + e2.getTransitions().get(src).get( dst));
                 e1.addTransitions( src, dst, e2.getTransitions().get(src).get( dst) );
             }
         }

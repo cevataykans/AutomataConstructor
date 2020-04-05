@@ -55,6 +55,32 @@ public class MyApplication {
         System.out.println("----------Converted to DFA----------\n\n");
         Automaton<Integer, Character> dfa1 = test1.toDFA();
         dfa1.printGV();
+
+
+        /*
+
+        Pls dont edit below
+
+         */
+
+
+		// Example of using the regexp parser: "(aba)*c+a|cd"
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println( "Below is the failed experiment:");
+		System.out.println();
+
+		String toParse = "(aba)*c+a|cd";
+		System.out.println( toParse);
+		System.out.println();
+		EpsNFA epsNFA = automata.REParser.parse( toParse).accept( new PrettyPrinter());
+		epsNFA.printGV();
+
+		System.out.println();
+		Automaton<Integer, Character> testDFA = epsNFA.toDFA();
+		testDFA.printGV();
+
         System.exit(0);
 
 
