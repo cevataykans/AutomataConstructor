@@ -65,11 +65,6 @@ public class MyApplication {
 
 
 		// Example of using the regexp parser: "(aba)*c+a|cd"
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		System.out.println( "Below is the failed experiment:");
-		System.out.println();
 
 		String toParse = "(aba)*c+a|cd";
 		System.out.println( toParse);
@@ -79,6 +74,15 @@ public class MyApplication {
 
 		System.out.println();
 		Automaton<Integer, Character> testDFA = epsNFA.toDFA();
+		testDFA.printGV();
+
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println( "Below is the 3.4 experiment:");
+		System.out.println();
+
+		new AutomataMinimizer( testDFA);
 		testDFA.printGV();
 
         System.exit(0);
