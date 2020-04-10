@@ -65,28 +65,29 @@ public class MyApplication {
 
 
 		// Example of using the regexp parser: "(aba)*c+a|cd"
-
-		String toParse = "(aba)*c+a|cd";
+		System.out.println( "Checkpoint 0");
+		String toParse = "(a*|ba)*";
 		System.out.println( toParse);
 		System.out.println();
+		System.out.println( "Checkpoint 1");
 		EpsNFA epsNFA = automata.REParser.parse( toParse).accept( new PrettyPrinter());
 		epsNFA.printGV();
-
+		System.out.println( "Checkpoint 2");
 		System.out.println();
 		Automaton<Integer, Character> testDFA = epsNFA.toDFA();
 		testDFA.printGV();
-
+		System.out.println( "Checkpoint 3");
 		System.out.println();
 		System.out.println();
 		System.out.println();
 		System.out.println( "Below is the 3.4 experiment:");
 		System.out.println();
 
+		System.out.println( "Checkpoint 4");
 		new AutomataMinimizer( testDFA);
 		testDFA.printGV();
-
+		System.out.println( "Checkpoint 5");
         System.exit(0);
-
 
     }
 
