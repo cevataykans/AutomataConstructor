@@ -72,6 +72,7 @@ public class EpsNFA extends Automaton<Integer, Character> {
 
         while (!toVisit.isEmpty()) {
             Set<Integer> currentSet = toVisit.remove(0);
+            //System.out.println("Count: " + dfaStateCount + " State: " + currentSet);
 
             // Map the current set to an index
             dfa.put(currentSet, new HashMap<Character, Set<Integer>>());
@@ -84,7 +85,7 @@ public class EpsNFA extends Automaton<Integer, Character> {
                 for (Integer state : currentSet) {
                     Map<Integer, Set<Character>> curTransitions = trans.get(state);
 
-                /* If a transition from the state exists, compute the states
+                    /* If a transition from the state exists, compute the states
                    that can be reached from it directly with the current input symbol*/
                     if (curTransitions != null) {
                         ArrayList<Integer> epsilonVisits = new ArrayList<Integer>();
@@ -97,28 +98,20 @@ public class EpsNFA extends Automaton<Integer, Character> {
                             }
                         }
 
-                    /*Process the states that can be reached with
-                       e-transitions from the states found in the previous step*/
-                        while (!epsilonVisits.isEmpty()) {
-                            Integer epsCheck = epsilonVisits.remove(0);
-                            Map<Integer, Set<Character>> epsCheckTransition = trans.get(epsCheck);
-
-                            // If any transitions from the current state exist, check them
-                            if (epsCheckTransition != null) {
-                                for (Integer dst : epsCheckTransition.keySet()) {
-                                    if (epsCheckTransition.get(dst).contains(EPSILON)) {
-                                        transition.add(dst);
-                                        epsilonVisits.add(dst);
-                                    }
-                                }
-                            }
+                        /* Find the states that can be reached with e-transitions
+                            from the states we found in the previous step*/
+                        Set<Integer> epsClosures = new HashSet<Integer>();
+                        for (Integer dest : transition) {
+                            epsClosures.addAll(epsClosure(dest));
                         }
+                        transition.addAll(epsClosures);
                     }
                 }
 
-            /* If the current set is not already processed and its
-             not empty, add it to the list for further processing*/
-                if (!dfa.keySet().contains(transition) && !transition.isEmpty())
+                /* If the current set is not already processed and
+                   is not in the toVisit list for processing and
+                   it is not empty, add it to the list for processing*/
+                if (!setToIntMapping.keySet().contains(transition) && !transition.isEmpty() && !toVisit.contains(transition))
                     toVisit.add(transition);
 
                 dfa.get(currentSet).put(input, transition);
@@ -134,7 +127,7 @@ public class EpsNFA extends Automaton<Integer, Character> {
             Integer src = setToIntMapping.get(state);
             Map<Character, Set<Integer>> transitions = dfa.get(state);
 
-        /* If the current set of states contains the accepting
+            /* If the current set of states contains the accepting
            state of the e-NFA, add its mapping to the final DFA*/
             if (state.contains(eNfaAccepting)) {
                 finalDFA.addAcceptingState(src);
