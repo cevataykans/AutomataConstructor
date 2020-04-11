@@ -84,7 +84,8 @@ public class MyApplication {
 		System.out.println();
 
 		System.out.println( "Checkpoint 4");
-		new AutomataMinimizer( testDFA);
+		AutomataMinimizer minimizer = new AutomataMinimizer( testDFA);
+		testDFA = minimizer.minimize();
 		testDFA.printGV();
 		System.out.println( "Checkpoint 5");
         System.exit(0);
