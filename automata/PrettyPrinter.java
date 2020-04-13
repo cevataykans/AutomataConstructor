@@ -62,7 +62,13 @@ public class PrettyPrinter implements RegExpVisitor {
     // No idea what this does? if it does not match any character, discard it, return null? Well it matches everything, .
     public EpsNFA visit(Dot dot) {
         System.out.print(".");
-        return null;
+
+        EpsNFA base = new EpsNFA();
+        base.addTransition( 0, 0, EPSILON);
+        base.setInitialState( 0);
+        base.addAcceptingState( 0);
+
+        return base;
     }
 
     public EpsNFA visit(Litteral litteral) {
