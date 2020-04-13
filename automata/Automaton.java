@@ -89,7 +89,76 @@ public class Automaton<State, Sym> {
         }
         return symbols;
     }
-    
+
+    /*
+        Checks whether the automaton accepts a
+        substring of the given input string
+     */
+    public boolean containsPattern(String input) {
+        Set<Sym> inputSymbols = this.getSymbols();
+
+        for (int i = 0; i < input.length(); i++) {
+            if (inputSymbols.contains(input.charAt(i))) {
+                boolean patternFound = this.searchPattern(input.substring(i));
+
+                if (patternFound) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /*
+        Searches for a matching pattern in the given substring
+     */
+    private boolean searchPattern(String word) {
+        Set<Sym> inputSymbols = this.getSymbols(); // the symbols that the automaton can receive as input
+        Set<State> toBeProcessed = new HashSet<State>(); // holds the current state
+
+        for (int i = 0; i < word.length(); i++) {
+            Character current = word.charAt(i);
+
+            if (i == 0) {
+                // if this is the first iteration, add the destination from the initial state
+                // on the given input symbol
+                toBeProcessed.addAll(this.getSuccessors(this.initial, (Sym) current));
+            } else {
+                Set<State> successors = new HashSet<State>(); // holds the next state
+
+                // Find the states that can be reached from the current state on current input symbol
+                for (State src : toBeProcessed)
+                    successors.addAll(this.getSuccessors(src, (Sym) current));
+
+                // If no transitions labeled with the input symbol, no match
+                if (successors.isEmpty())
+                    return false;
+
+                // clear the current set
+                toBeProcessed.clear();
+                // add the items in the successors set to it
+                toBeProcessed.addAll(successors);
+            }
+
+            // after completing the iteration, if we obtain
+            // any accepting state, it's a match
+            if (containsAnyAccepting(toBeProcessed))
+                return true;
+
+        }
+        return false;
+    }
+
+    // Checks whether the given set of states has any accepting states
+    private boolean containsAnyAccepting(Set<State> other) {
+        for (State cur : other) {
+            if (this.accepting.contains(cur)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void mergeStates(State s1, State s2) {
         
         if (s1.equals(s2))
