@@ -72,7 +72,7 @@ public class MyApplication {
 
 
 		// Example of using the regexp parser: "(aba)*c+a|cd"
-		/*System.out.println( "Checkpoint 0");
+		System.out.println( "Checkpoint 0");
 		String toParse = "(a*|ba)*";
 		System.out.println( toParse);
 		System.out.println();
@@ -94,13 +94,15 @@ public class MyApplication {
 		AutomataMinimizer minimizer = new AutomataMinimizer( testDFA);
 		testDFA = minimizer.minimize();
 		testDFA.printGV();
-		System.out.println( "Checkpoint 5");*/
+		System.out.println( "Checkpoint 5");
 
         System.out.println("Below is the experiment of 3.5....");
 
-		ArrayList<String> fileContents = readFile("testcase1.txt");
+		ArrayList<String> fileContents = readFile("testcase5.txt");
 
-		String alphabet = fileContents.get(0); // input alphabet
+		String alphabetString = fileContents.get(0); // input alphabet
+        PrettyPrinter.alphabet = alphabetString;
+
         fileContents.remove(0);
         String toBeParsed = fileContents.get(0); // regex
         fileContents.remove(0);

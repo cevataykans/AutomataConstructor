@@ -6,6 +6,8 @@ import static automata.EpsNFA.EPSILON;
 
 public class PrettyPrinter implements RegExpVisitor {
 
+    public static String alphabet;
+
 
     public EpsNFA visit(Closure closure) {
         System.out.print("(");
@@ -64,9 +66,13 @@ public class PrettyPrinter implements RegExpVisitor {
         System.out.print(".");
 
         EpsNFA base = new EpsNFA();
-        base.addTransition( 0, 0, EPSILON);
+        //base.addTransition( 0, 1, EPSILON);
+        for ( int i = 0; i < PrettyPrinter.alphabet.length(); i++)
+        {
+            base.addTransition( 0, 1, PrettyPrinter.alphabet.charAt( i) );
+        }
         base.setInitialState( 0);
-        base.addAcceptingState( 0);
+        base.addAcceptingState( 1);
 
         return base;
     }
