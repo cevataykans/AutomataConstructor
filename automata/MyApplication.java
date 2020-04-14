@@ -98,26 +98,32 @@ public class MyApplication {
 
         System.out.println("Below is the experiment of 3.5....");
 
-		ArrayList<String> fileContents = readFile("testcase5.txt");
+        for (int idx = 1; idx <= 5; idx++) {
+            System.out.println("\n\n\n---------- Processing testcase" + idx + ".txt file ----------\n\n\n");
+            ArrayList<String> fileContents = readFile("testcase" + idx + ".txt");
 
-		String alphabetString = fileContents.get(0); // input alphabet
-        PrettyPrinter.alphabet = alphabetString;
 
-        fileContents.remove(0);
-        String toBeParsed = fileContents.get(0); // regex
-        fileContents.remove(0);
+            String alphabetString = fileContents.get(0); // input alphabet
+            PrettyPrinter.alphabet = alphabetString;
 
-        System.out.println(toBeParsed);
-        EpsNFA eNFA = automata.REParser.parse( toBeParsed).accept( new PrettyPrinter());
-        Automaton<Integer, Character> shrinked = eNFA.toDFA();
-        AutomataMinimizer min = new AutomataMinimizer( shrinked);
-        shrinked = min.minimize();
+            fileContents.remove(0);
+            String toBeParsed = fileContents.get(0); // regex
+            fileContents.remove(0);
 
-        for (String line : fileContents) {
-            if (shrinked.containsPattern(line))
-                System.out.println(line);
+            System.out.println(toBeParsed);
+            EpsNFA eNFA = automata.REParser.parse( toBeParsed).accept( new PrettyPrinter());
+            Automaton<Integer, Character> shrinked = eNFA.toDFA();
+            AutomataMinimizer min = new AutomataMinimizer( shrinked);
+            shrinked = min.minimize();
+
+            System.out.println("The strings in this file with a matching pattern are:\n\n");
+
+            for (String line : fileContents) {
+                if (shrinked.containsPattern(line))
+                    System.out.println(line);
+            }
         }
-
+        
         System.exit(0);
     }
 
