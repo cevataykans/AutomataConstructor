@@ -13,6 +13,8 @@ public class MyApplication {
 
     public static void main(String[] args) throws Exception {
 
+
+
         /*Character epsilon = EpsNFA.EPSILON;
         EpsNFA test = new EpsNFA();
         test.addAcceptingState(2);
