@@ -70,7 +70,7 @@ public class MyApplication {
 
          */
 
-
+		/*
 		// Example of using the regexp parser: "(aba)*c+a|cd"
 		System.out.println( "Checkpoint 0");
 		String toParse = "(a*|ba)*";
@@ -96,9 +96,20 @@ public class MyApplication {
 		testDFA.printGV();
 		System.out.println( "Checkpoint 5");
 
-        System.out.println("Below is the experiment of 3.5....");
+        System.out.println("Below is the experiment of 3.5....");*/
 
-        for (int idx = 1; idx <= 5; idx++) {
+		int testCaseCount = 0;
+        try
+		{
+			testCaseCount = new File( "src/testcases/").list().length;
+		}
+		catch ( NullPointerException e)
+		{
+			System.out.println( "Could not open src/testcases, file might be deleted!");
+			System.exit(0);
+		}
+
+        for (int idx = 1; idx <= testCaseCount; idx++) {
             System.out.println("\n\n\n---------- Processing testcase" + idx + ".txt file ----------\n\n\n");
             ArrayList<String> fileContents = readFile("testcase" + idx + ".txt");
 
